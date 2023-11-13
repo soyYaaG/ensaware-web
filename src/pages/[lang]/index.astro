@@ -12,7 +12,7 @@ const t = useTranslations(lang);
 const { index } = t("pages") as Pages;
 ---
 
-<Layout title="Iniciar Sesión">
+<Layout title={index.title}>
 	<main class="h-screen flex flex-row">
 		<aside class="hidden md:flex w-1/2">
 			<Image

@@ -1,0 +1,25 @@
+---
+import { Header } from "../components";
+import Layout from "./Layout.astro";
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Layout title={title}>
+	<main>
+		<Header client:only />
+
+		<section class="container mt-2">
+			<slot />
+		</section>
+	</main>
+</Layout>
+<style is:global>
+	html {
+		font-family: "IBM Plex Mono", monospace, system-ui, sans-serif;
+	}
+</style>

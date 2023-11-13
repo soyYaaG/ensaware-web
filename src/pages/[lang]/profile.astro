@@ -1,0 +1,20 @@
+---
+import { CustomAlert, CustomProfile } from "../../components";
+import Main from "../../layouts/Main.astro";
+
+const { searchParams } = Astro.url;
+const updateCareer = searchParams.get("updateCareer");
+---
+
+<Main title="Ensaware - Perfil">
+	{
+		updateCareer && updateCareer.toLocaleLowerCase() === "yes" && (
+			<CustomAlert
+				message="Por favor actualiza la carrera que estudia en la Corporación Universitaria Americana."
+				title="¡Actualizar Carrera!"
+				className="bg-red-100"
+			/>
+		)
+	}
+	<CustomProfile client:only />
+</Main>

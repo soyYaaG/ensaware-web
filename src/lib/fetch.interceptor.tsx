@@ -9,8 +9,8 @@ export const fetchInterceptor = async (
 	let response: Response;
 
 	if (typeof input === "string" && input.includes("authorization") && init)
-		response = await fetch(input, init)
-	else if(typeof input === "string" && input.includes("authorization"))
+		response = await fetch(input, init);
+	else if (typeof input === "string" && input.includes("authorization"))
 		response = await fetch(input);
 	else {
 		const updateInit = await updateHeader(init);
@@ -46,9 +46,8 @@ const getRefreshToken = async () => {
 		return;
 	}
 
-	const response = await refreshToken(user?.provider) as IToken;
+	const response = (await refreshToken(user?.provider)) as IToken;
 	response.id = token?.id;
-	console.log(response);
 	await save<IToken>(DataBaseKeys.TOKEN, response);
 };
 
@@ -62,7 +61,6 @@ const handleFetchError = async (error: Response) => {
 			// toast.success(
 			// 	"Token actualizado. Por favor intenta nuevamente.",
 			// );
-			console.log("Token actualizado. Por favor intenta nuevamente.");
 			throw messageError;
 		}
 	}
@@ -75,9 +73,8 @@ const handleFetchError = async (error: Response) => {
 			message = responseData.message;
 		}
 	} catch (e) {
-		console.error(e);
+		throw e;
 	}
 
-	console.log(message);
-	throw error;
+	throw message;
 };

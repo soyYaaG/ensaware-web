@@ -1,17 +1,22 @@
 ---
 import { CustomAlert, CustomProfile } from "../../components";
+import { getLangFromUrl, useTranslations, type Pages } from "../../i18n";
 import Main from "../../layouts/Main.astro";
 
 const { searchParams } = Astro.url;
 const updateCareer = searchParams.get("updateCareer");
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const { profile } = t("pages") as Pages;
 ---
 
-<Main title="Ensaware - Perfil">
+<Main title={profile.title}>
 	{
 		updateCareer && updateCareer.toLocaleLowerCase() === "yes" && (
 			<CustomAlert
-				message="Por favor actualiza la carrera que estudia en la Corporación Universitaria Americana."
-				title="¡Actualizar Carrera!"
+				message={profile.message}
+				title={profile.alertTitle}
 				className="bg-red-100"
 			/>
 		)

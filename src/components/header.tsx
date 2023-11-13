@@ -12,6 +12,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
+	Toaster,
 } from "./ui";
 import type { IUser } from "../entities";
 import { DataBaseKeys, get, getUrl, remove } from "../lib";
@@ -24,10 +25,6 @@ export const Header = () => {
 	const lang = getLangFromUrl(url);
 	const t = useTranslations(lang);
 	const { header } = t("components") as Components;
-
-	console.log("user astro", user);
-	console.log("user?.career?.id", user?.career?.id);
-	console.log("!user?.career?.id", !user?.career?.id);
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -51,6 +48,7 @@ export const Header = () => {
 
 	return (
 		<>
+			<Toaster />
 			<header className="bg-primary p-4 flex flex-row items-center justify-between text-white">
 				<Sidebar />
 

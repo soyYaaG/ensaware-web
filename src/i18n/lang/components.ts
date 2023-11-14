@@ -21,6 +21,9 @@ export type ProfileComponent = {
 	email: string;
 	selectCareer: string;
 	button: string;
+	date: string;
+	noDate: string;
+	creationDate: string;
 };
 
 export type SideBarComponent = {

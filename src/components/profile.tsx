@@ -17,16 +17,27 @@ import {
 	Label,
 	useToast,
 } from "./ui";
-import { $userStore, setDefaultValue, setSelectData } from "../store";
-import type { ICareer, ISelectData } from "../entities";
-import { allCareer } from "../services";
+import {
+	$defaultSelectValue,
+	$userStore,
+	setDefaultValue,
+	setSelectData,
+} from "../store";
+import type { ICareer, ISelectData, IUser } from "../entities";
+import { allCareer, updateCareer } from "../services";
 import { $isLoad, setLoad } from "../store";
-import { getUrl } from "../lib";
-import { getLangFromUrl, useTranslations, type Components } from "../i18n";
+import { DataBaseKeys, getUrl, save } from "../lib";
+import {
+	getLangFromUrl,
+	useTranslations,
+	type Components,
+	getDate,
+} from "../i18n";
 
 export const CustomProfile = () => {
 	const isLoad = useStore($isLoad);
 	const user = useStore($userStore);
+	const career = useStore($defaultSelectValue);
 	const { toast } = useToast();
 	const url = getUrl();
 	const lang = getLangFromUrl(url);
@@ -37,6 +48,10 @@ export const CustomProfile = () => {
 		const fetchData = async () => {
 			setLoad(true);
 			try {
+				if (user?.career) {
+					return;
+				}
+
 				const careerData: ICareer[] | null = await allCareer();
 				const selectData: ISelectData[] | undefined = careerData?.map(
 					(item: ICareer): ISelectData => {
@@ -66,6 +81,20 @@ export const CustomProfile = () => {
 		setDefaultValue(user?.career?.id || "");
 	}, [user?.career?.id]);
 
+	const btnUpdateCareer = async () => {
+		setLoad(true);
+		try {
+			const response: IUser | null = await updateCareer(career);
+			await save<IUser>(DataBaseKeys.USER, response);
+		} catch (error: any) {
+			toast({
+				description: error,
+			});
+		} finally {
+			setLoad(false);
+		}
+	};
+
 	return (
 		<>
 			{isLoad && <Load />}
@@ -73,6 +102,16 @@ export const CustomProfile = () => {
 				<CardHeader>
 					<CardTitle>{profile.title}</CardTitle>
 					<CardDescription>{profile.description}</CardDescription>
+					<CardDescription>
+						{profile.date}
+						{user?.modified
+							? getDate({
+									date: user?.modified || "",
+									displayTime: true,
+									lang: lang,
+							  })
+							: profile.noDate}
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="flex justify-center my-4">
@@ -135,10 +174,32 @@ export const CustomProfile = () => {
 								/>
 							)}
 						</div>
+
+						<div className="grid gap-1.5 my-4">
+							<Label htmlFor="creationDate">
+								{profile.creationDate}
+							</Label>
+							<Input
+								disabled
+								type="text"
+								id="creationDate"
+								placeholder={profile.creationDate}
+								value={getDate({
+									date: user?.created || "",
+									lang: lang,
+									displayTime: true,
+								})}
+								autoComplete="off"
+							/>
+						</div>
 					</div>
 				</CardContent>
 				<CardFooter className="flex justify-center md:justify-end">
-					<Button className="hover:bg-purple-700">
+					<Button
+						className="hover:bg-purple-700"
+						onClick={btnUpdateCareer}
+						disabled={!!user?.career}
+					>
 						<GraduationCap className="mr-2" />
 						{profile.button}
 					</Button>

@@ -22,6 +22,9 @@ export const es: Translations = {
 			email: "Correo electrónico",
 			selectCareer: "Seleccionar carrera",
 			button: "Actualizar datos",
+			date: "Última fecha de actualización: ",
+			noDate: "Sin actualización.",
+			creationDate: "Fecha de creación",
 		},
 	},
 	pages: {

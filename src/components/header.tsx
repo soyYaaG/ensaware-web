@@ -66,7 +66,7 @@ export const Header = () => {
 								}
 								alt={user?.display_name}
 							/>
-							<AvatarFallback>ENW</AvatarFallback>
+							<AvatarFallback>enw</AvatarFallback>
 						</Avatar>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent>

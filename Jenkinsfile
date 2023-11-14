@@ -1,3 +1,5 @@
+def path_env_file = ""
+
 pipeline {
     agent any
 
@@ -5,6 +7,15 @@ pipeline {
         stage("Checkout") {
             steps {
                 git branch: "main", url: "https://github.com/soyYaaG/ensaware-web.git"
+            }
+        }
+
+		stage ("Environment") {
+            steps {
+                script {
+                    sh "env > .env"
+                    path_env_file = pwd()
+                }
             }
         }
 
@@ -18,7 +29,7 @@ pipeline {
 
         stage("Deploy") {
             steps {
-                sh "docker-compose up -d"
+				sh "docker-compose --env-file ${path_env_file}/.env up -d"
             }
         }
     }

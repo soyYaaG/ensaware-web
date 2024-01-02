@@ -2,10 +2,15 @@
 dist/
 
 # generated types
-.astro/
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
 
 # dependencies
-node_modules/
+node_modules
+bower_components
 
 # logs
 npm-debug.log*

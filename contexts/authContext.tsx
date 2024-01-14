@@ -18,7 +18,7 @@ import {
 } from "react";
 
 type AuthContextType = {
-	authPermission: permissionProfile[] | null;
+	authPermission: { [key: string]: permissionProfile } | null;
 	authUser: user | null;
 	isLoad: boolean;
 	isLoggedIn: boolean;
@@ -50,12 +50,12 @@ export default function AuthContextProvider({
 
 	const authPermissionInLocalStorage = getInLocalStorage(
 		LocalStorageKeys.PERMISSION_PROFILE
-	) as permissionProfile[] | null;
+	);
 
 	const [authUser, setAuthUser] = useState<user | null>(authUserInLocalStorage);
-	const [authPermission, setAuthPermission] = useState<
-		permissionProfile[] | null
-	>(authPermissionInLocalStorage);
+	const [authPermission, setAuthPermission] = useState<{
+		[key: string]: permissionProfile;
+	} | null>(authPermissionInLocalStorage);
 	const [getIsLoad, setIsLoad] = useState<boolean>(false);
 
 	const login = useCallback((tokenData: token) => {
@@ -69,11 +69,15 @@ export default function AuthContextProvider({
 			const responsePemissionProfile = await getPermissionProfile(
 				responseUser.profile?.id || ""
 			);
+			const permissionsObject: { [key: string]: permissionProfile } = {};
+			responsePemissionProfile.forEach((item: permissionProfile) => {
+				permissionsObject[item.permission.code_name] = item;
+			});
 			saveInLocalStorage(
 				LocalStorageKeys.PERMISSION_PROFILE,
-				JSON.stringify(responsePemissionProfile)
+				JSON.stringify(permissionsObject)
 			);
-			setAuthPermission(responsePemissionProfile);
+			setAuthPermission(permissionsObject);
 		};
 
 		getData();

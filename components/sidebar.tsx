@@ -19,11 +19,11 @@ import {
 	SheetContent,
 	SheetTrigger,
 } from "./ui";
-import { usePermission } from "@/hooks";
 import Link from "next/link";
+import { useAuthContext } from "@/contexts/authContext";
 
 export const Sidebar = () => {
-	const { permissionsProfileState } = usePermission();
+	const { authPermission } = useAuthContext();
 
 	return (
 		<Sheet>
@@ -46,17 +46,17 @@ export const Sidebar = () => {
 						</CommandItem>
 						<CommandSeparator />
 
-						{permissionsProfileState["career:read"] && (
+						{authPermission && authPermission["career:read"] && (
 							<>
 								<CommandGroup heading="Carreras">
-									{permissionsProfileState["career:read"] && (
+									{authPermission["career:read"] && (
 										<CommandItem>
 											<ScanSearch className="mr-2 h-4 w-4" />
 											<Link href="/app/careers">
 												<SheetClose asChild>
 													<span>
 														{
-															permissionsProfileState["career:read"].permission
+															authPermission["career:read"].permission
 																.description
 														}
 													</span>
@@ -69,17 +69,17 @@ export const Sidebar = () => {
 							</>
 						)}
 
-						{permissionsProfileState["profile:read"] && (
+						{authPermission && authPermission["profile:read"] && (
 							<>
 								<CommandGroup heading="Permisos">
-									{permissionsProfileState["profile:read"] && (
+									{authPermission["profile:read"] && (
 										<CommandItem>
 											<UserSquare2 className="mr-2 h-4 w-4" />
 											<Link href="/app/profiles">
 												<SheetClose asChild>
 													<span>
 														{
-															permissionsProfileState["profile:read"].permission
+															authPermission["profile:read"].permission
 																.description
 														}
 													</span>
@@ -92,18 +92,18 @@ export const Sidebar = () => {
 							</>
 						)}
 
-						{permissionsProfileState["permission:read"] && (
+						{authPermission && authPermission["permission:read"] && (
 							<>
 								<CommandGroup heading="Permisos">
-									{permissionsProfileState["permission:read"] && (
+									{authPermission["permission:read"] && (
 										<CommandItem>
 											<Fingerprint className="mr-2 h-4 w-4" />
 											<Link href="/app/permissions">
 												<SheetClose asChild>
 													<span>
 														{
-															permissionsProfileState["permission:read"]
-																.permission.description
+															authPermission["permission:read"].permission
+																.description
 														}
 													</span>
 												</SheetClose>
@@ -115,19 +115,16 @@ export const Sidebar = () => {
 							</>
 						)}
 
-						{permissionsProfileState["user:read"] && (
+						{authPermission && authPermission["user:read"] && (
 							<>
 								<CommandGroup heading="Usuarios">
-									{permissionsProfileState["user:read"] && (
+									{authPermission["user:read"] && (
 										<CommandItem>
 											<UserCog className="mr-2 h-4 w-4" />
 											<Link href="/app/users">
 												<SheetClose asChild>
 													<span>
-														{
-															permissionsProfileState["user:read"].permission
-																.description
-														}
+														{authPermission["user:read"].permission.description}
 													</span>
 												</SheetClose>
 											</Link>

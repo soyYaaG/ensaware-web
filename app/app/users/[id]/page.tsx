@@ -15,16 +15,15 @@ import {
 	Label,
 } from "@/components/ui";
 import { useAuthContext } from "@/contexts/authContext";
-import { useCareer, usePermission, useProfile, useUsers } from "@/hooks";
+import { useCareer, useProfile, useUsers } from "@/hooks";
 import { getDate } from "@/lib";
 import { GraduationCap } from "lucide-react";
-import { redirect, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function EditUser() {
-	const { authUser, isLoad } = useAuthContext();
+	const { authPermission, authUser, isLoad } = useAuthContext();
 	const { career, onValueChange, selectCareerData, update } = useCareer();
-	const { permissionsProfileState } = usePermission();
 	const { profile, selectProfilesData, onValueChangeProfile } = useProfile();
 	const { getUserData, user } = useUsers();
 	const params = useParams();
@@ -130,7 +129,8 @@ export default function EditUser() {
 						</div>
 					</CardContent>
 					<CardFooter className="flex justify-center md:justify-end">
-						{permissionsProfileState["user:update"] &&
+						{authPermission &&
+							authPermission["user:update"] &&
 							user.id !== authUser?.id && (
 								<Button
 									className="hover:bg-purple-700"

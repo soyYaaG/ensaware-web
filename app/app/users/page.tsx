@@ -20,7 +20,6 @@ import {
 } from "@/components/ui";
 import { useAuthContext } from "@/contexts/authContext";
 import { user } from "@/entities";
-import { usePermission } from "@/hooks";
 import { useUsers } from "@/hooks/useUsers";
 import { getDate } from "@/lib";
 import {
@@ -45,8 +44,7 @@ export default function Users() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
-	const { authUser, isLoad } = useAuthContext();
-	const { permissionsProfileState } = usePermission();
+	const { authPermission, authUser, isLoad } = useAuthContext();
 	const { next, pagination, prev, remove, users: data } = useUsers();
 
 	const columns: ColumnDef<user>[] = [
@@ -143,7 +141,8 @@ export default function Users() {
 								Copiar nombre
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							{permissionsProfileState["user:update"] &&
+							{authPermission &&
+								authPermission["user:update"] &&
 								data.id !== authUser?.id && (
 									<Link href={`/app/users/${data.id}`}>
 										<DropdownMenuItem className="cursor-pointer">
@@ -152,7 +151,8 @@ export default function Users() {
 										</DropdownMenuItem>
 									</Link>
 								)}
-							{permissionsProfileState["user:delete"] &&
+							{authPermission &&
+								authPermission["user:delete"] &&
 								data.id !== authUser?.id && (
 									<DropdownMenuItem
 										className="cursor-pointer"

@@ -1,6 +1,6 @@
 import { token, user } from "@/entities";
-import { DataBaseKeys, get, save } from ".";
 import { refreshToken } from "../services";
+import { LocalStorageKeys, getInLocalStorage, saveInLocalStorage } from ".";
 
 export const fetchInterceptor = async (
 	input: RequestInfo | URL,
@@ -13,7 +13,7 @@ export const fetchInterceptor = async (
 	else if (typeof input === "string" && input.includes("authorization"))
 		response = await fetch(input);
 	else {
-		const updateInit = await updateHeader(init);
+		const updateInit = updateHeader(init);
 		response = await fetch(input, updateInit);
 	}
 
@@ -24,31 +24,35 @@ export const fetchInterceptor = async (
 	}
 };
 
-const updateHeader = async (
-	request?: RequestInit
-): Promise<RequestInit | undefined> => {
-	const token: token | null = await get<token>(DataBaseKeys.TOKEN);
+const updateHeader = (request?: RequestInit): RequestInit | undefined => {
+	const tokenData: token | null = getInLocalStorage(
+		LocalStorageKeys.TOKEN
+	) as token | null;
 
 	return {
 		...request,
 		headers: {
 			...request?.headers,
-			Authorization: `${token?.token_type} ${token?.token}`,
+			Authorization: `${tokenData?.token_type} ${tokenData?.token}`,
 		},
 	};
 };
 
 const getRefreshToken = async () => {
-	const user: user | null = await get<user>(DataBaseKeys.USER);
-	const token: token | null = await get<token>(DataBaseKeys.TOKEN);
+	const userData: user | null = getInLocalStorage(
+		LocalStorageKeys.USER
+	) as user | null;
+	const tokenData: token | null = getInLocalStorage(
+		LocalStorageKeys.TOKEN
+	) as token | null;
 
-	if (!user) {
+	if (!userData) {
 		return;
 	}
 
-	const response = (await refreshToken(user?.provider)) as token;
-	response.id = token?.id;
-	await save<token>(DataBaseKeys.TOKEN, response);
+	const response = (await refreshToken(userData?.provider)) as token;
+	response.id = tokenData?.id;
+	saveInLocalStorage(LocalStorageKeys.TOKEN, JSON.stringify(response));
 };
 
 const handleFetchError = async (

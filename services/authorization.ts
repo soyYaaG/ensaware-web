@@ -1,8 +1,8 @@
 import { token } from "@/entities";
 import {
-	DataBaseKeys,
+	LocalStorageKeys,
 	fetchInterceptor,
-	get,
+	getInLocalStorage,
 	requestPath,
 	urlBuilder,
 } from "@/lib";
@@ -17,7 +17,7 @@ export const login = (provider: string) => {
 };
 
 export const refreshToken = async (provider: string) => {
-	const token: token | null = await get<token>(DataBaseKeys.TOKEN);
+	const tokenData: token = getInLocalStorage(LocalStorageKeys.TOKEN) as token;
 
 	let url: string = urlBuilder.services(requestPath.authorization, {
 		provider: provider,
@@ -28,7 +28,7 @@ export const refreshToken = async (provider: string) => {
 
 	const response = await fetchInterceptor(url, {
 		body: JSON.stringify({
-			refresh_token: token?.refresh_token,
+			refresh_token: tokenData.refresh_token,
 		}),
 		headers: {
 			"Content-Type": "application/json",
@@ -36,5 +36,5 @@ export const refreshToken = async (provider: string) => {
 		method: "POST",
 	});
 
-	return await response.json();
+	return (await response.json()) as token;
 };

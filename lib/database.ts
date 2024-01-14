@@ -42,7 +42,7 @@ function openDB(): Promise<IDBDatabase> {
 
 export async function save<T>(
 	objectStoreName: string,
-	value: T,
+	value: T
 ): Promise<void> {
 	const db = await openDB();
 	const transaction = db.transaction(objectStoreName, DataBaseMode.READWRITE);

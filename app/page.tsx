@@ -6,20 +6,21 @@ import { FormInput, LogIn } from "lucide-react";
 import loginEnsaware from "../public/img/login-ensaware.jpg";
 import ensaware from "../public/img/ensaware.png";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { useLogin } from "@/hooks";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
+import { useAuthContext } from "@/contexts/authContext";
 import { useEffect } from "react";
 
 export default function Login() {
-	const { handleLoginClick, isLogged } = useLogin();
-	const router = useRouter();
+	const { isLoggedIn } = useAuthContext();
+	const { handleLoginClick } = useLogin();
 
 	useEffect(() => {
-		if (isLogged) {
-			router.push("/app");
+		if (isLoggedIn) {
+			redirect("/app");
 		}
-	}, [isLogged, router]);
+	}, [isLoggedIn]);
 
 	return (
 		<main className="h-screen flex flex-row">

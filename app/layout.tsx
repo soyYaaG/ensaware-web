@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ibmPlexMono } from "@/lib";
 import "@/styles/globals.css";
+import AuthContextProvider from "@/contexts/authContext";
 
 export const metadata: Metadata = {
 	title: "Ensaware",
@@ -15,7 +16,9 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="es">
-			<body className={`${ibmPlexMono.className} antialiased`}>{children}</body>
+			<body className={`${ibmPlexMono.className} antialiased`}>
+				<AuthContextProvider>{children}</AuthContextProvider>
+			</body>
 		</html>
 	);
 }

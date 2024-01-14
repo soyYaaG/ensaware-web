@@ -33,7 +33,7 @@ export default function Profile() {
 						Información de la persona que ha iniciado sesión.
 					</CardDescription>
 					<CardDescription>
-						Última fecha de actualización:
+						Última fecha de actualización:{" "}
 						{authUser?.modified
 							? getDate({
 									date: authUser?.modified || "",
@@ -121,7 +121,9 @@ export default function Profile() {
 				<CardFooter className="flex justify-center md:justify-end">
 					<Button
 						className="hover:bg-purple-700"
-						onClick={update}
+						onClick={async () => {
+							await update();
+						}}
 						disabled={!!authUser?.career}
 					>
 						<GraduationCap className="mr-2" />

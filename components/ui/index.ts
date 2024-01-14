@@ -9,3 +9,4 @@ export * from "./label";
 export * from "./select";
 export * from "./sheet";
 export * from "./sonner";
+export * from "./table";

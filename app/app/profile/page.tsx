@@ -20,9 +20,8 @@ import { GraduationCap } from "lucide-react";
 import { Load } from "@/components/load";
 
 export default function Profile() {
-	const { authUser } = useAuthContext();
-	const { career, isLoad, onValueChange, selectCareerData, update } =
-		useCareer();
+	const { authUser, isLoad } = useAuthContext();
+	const { career, onValueChange, selectCareerData, update } = useCareer();
 
 	return (
 		<>

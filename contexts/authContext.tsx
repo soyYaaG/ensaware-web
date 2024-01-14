@@ -20,18 +20,22 @@ import {
 type AuthContextType = {
 	authPermission: permissionProfile[] | null;
 	authUser: user | null;
+	isLoad: boolean;
+	isLoggedIn: boolean;
 	login: (tokenData: token) => void;
 	logout: () => void;
-	isLoggedIn: boolean;
+	setLoad: (value: boolean) => void;
 	setUser: (value: user) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
 	authPermission: null,
 	authUser: null,
+	isLoad: true,
 	isLoggedIn: false,
 	login: (tokenData: token) => {},
 	logout: () => {},
+	setLoad: (value: boolean) => {},
 	setUser: (value: user) => {},
 });
 
@@ -52,6 +56,7 @@ export default function AuthContextProvider({
 	const [authPermission, setAuthPermission] = useState<
 		permissionProfile[] | null
 	>(authPermissionInLocalStorage);
+	const [getIsLoad, setIsLoad] = useState<boolean>(false);
 
 	const login = useCallback((tokenData: token) => {
 		const getData = async () => {
@@ -80,6 +85,10 @@ export default function AuthContextProvider({
 		setAuthPermission(null);
 	}, []);
 
+	const setLoad = useCallback((value: boolean) => {
+		setIsLoad(value);
+	}, []);
+
 	const setUser = useCallback((value: user) => {
 		saveInLocalStorage(LocalStorageKeys.USER, JSON.stringify(value));
 		setAuthUser(value);
@@ -89,12 +98,14 @@ export default function AuthContextProvider({
 		() => ({
 			authPermission,
 			authUser,
+			isLoad: getIsLoad,
 			isLoggedIn: authUser !== null,
 			login,
 			logout,
+			setLoad,
 			setUser,
 		}),
-		[authPermission, authUser, login, logout, setUser]
+		[authPermission, authUser, getIsLoad, login, logout, setLoad, setUser]
 	);
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

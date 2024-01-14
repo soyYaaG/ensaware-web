@@ -143,27 +143,25 @@ export default function Users() {
 								Copiar nombre
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							{permissionsProfileState["user:update"] && (
-								<Link href={`/users/edit/${data.id}`}>
+							{permissionsProfileState["user:update"] &&
+								data.id !== authUser?.id && (
+									<Link href={`/app/users/${data.id}`}>
+										<DropdownMenuItem className="cursor-pointer">
+											<Pen className="h-4 w-4 mr-2 text-blue-700" />
+											Editar
+										</DropdownMenuItem>
+									</Link>
+								)}
+							{permissionsProfileState["user:delete"] &&
+								data.id !== authUser?.id && (
 									<DropdownMenuItem
 										className="cursor-pointer"
-										disabled={data.id === authUser?.id}
+										onClick={() => remove(data.id)}
 									>
-										<Pen className="h-4 w-4 mr-2 text-blue-700" />
-										Editar
+										<Trash className="h-4 w-4 mr-2 text-red-700" />
+										Eliminar
 									</DropdownMenuItem>
-								</Link>
-							)}
-							{permissionsProfileState["user:delete"] && (
-								<DropdownMenuItem
-									className="cursor-pointer"
-									onClick={() => remove(data.id)}
-									disabled={data.id === authUser?.id}
-								>
-									<Trash className="h-4 w-4 mr-2 text-red-700" />
-									Eliminar
-								</DropdownMenuItem>
-							)}
+								)}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				);

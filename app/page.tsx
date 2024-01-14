@@ -45,7 +45,7 @@ export default function Login() {
 					className="mb-10"
 					height="250"
 					src={ensaware}
-					alt="Logo de la Corporación Universitaria Americana."
+					alt="Logo de la aplicación Ensaware."
 					width="250"
 					priority={false}
 				/>

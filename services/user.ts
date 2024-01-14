@@ -2,7 +2,7 @@ import { queryParameters, user, userPagination } from "@/entities";
 import { fetchInterceptor, requestPath, urlBuilder } from "@/lib";
 
 export const allUsers = async (
-	query: queryParameters = { page: 1, size: 50 }
+	query: queryParameters = { page: 1, size: 20 }
 ) => {
 	let url: string = urlBuilder.services(requestPath.user, {
 		version: "v1",
@@ -80,6 +80,26 @@ export const updateCareer = async (career_id: string) => {
 		},
 		body: JSON.stringify({
 			career_id: career_id,
+		}),
+	});
+
+	return (await response.json()) as user;
+};
+
+export const updateUserCareer = async (userId: string, careerId: string) => {
+	let url: string = urlBuilder.services(requestPath.user, {
+		version: "v1",
+	});
+
+	url = `${url}/${userId}`;
+
+	const response = await fetchInterceptor(url, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			career_id: careerId,
 		}),
 	});
 

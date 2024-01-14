@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/contexts/authContext";
 import { queryParameters, user, userPagination } from "@/entities";
 import { getPaginationQueryParameter } from "@/lib";
-import { allUsers, deleteUser } from "@/services";
+import { allUsers, deleteUser, getUser } from "@/services";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -11,8 +11,9 @@ export const useUsers = () => {
 	const [pagination, setPagination] = useState<userPagination>();
 	const [queryParameters, setQueryParameters] = useState<queryParameters>({
 		page: 1,
-		size: 1,
+		size: 20,
 	});
+	const [user, setUser] = useState<user | null>(null);
 	const [users, setUsers] = useState<user[]>([]);
 
 	useEffect(() => {
@@ -28,6 +29,18 @@ export const useUsers = () => {
 				setPagination(usersPagination);
 				setUsers(usersPagination.items);
 			}
+		} catch (error: any) {
+			toast(error);
+		} finally {
+			setLoad(false);
+		}
+	};
+
+	const getUserData = async (id: string) => {
+		setLoad(true);
+		try {
+			const data = await getUser(id);
+			setUser(data);
 		} catch (error: any) {
 			toast(error);
 		} finally {
@@ -59,10 +72,12 @@ export const useUsers = () => {
 
 	return {
 		getAllUsers,
+		getUserData,
 		next,
 		pagination,
 		prev,
 		remove,
+		user,
 		users,
 	};
 };

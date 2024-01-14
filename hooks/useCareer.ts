@@ -1,6 +1,6 @@
 import { useAuthContext } from "@/contexts/authContext";
 import { career, selectData, user } from "@/entities";
-import { allCareer, updateCareer } from "@/services";
+import { allCareer, updateCareer, updateUserCareer } from "@/services";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -40,11 +40,16 @@ export const useCareer = () => {
 		setCareer(value);
 	};
 
-	const update = async () => {
+	const update = async (userId?: string) => {
 		setLoad(true);
 		try {
-			const response: user = await updateCareer(career);
-			setUser(response);
+			let response: user;
+			if (userId) {
+				response = await updateUserCareer(userId, career);
+			} else {
+				response = await updateCareer(career);
+				setUser(response);
+			}
 			router.refresh();
 		} catch (error: any) {
 			toast(error);

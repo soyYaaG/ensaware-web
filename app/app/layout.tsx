@@ -19,9 +19,7 @@ import { Picture } from "@/components/picture";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 	const { authUser, isLoggedIn, logout } = useAuthContext();
 
-	if (!isLoggedIn) {
-		redirect("/");
-	}
+	if (!isLoggedIn) redirect("/");
 
 	return (
 		<main>

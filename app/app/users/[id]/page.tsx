@@ -41,7 +41,9 @@ export default function EditUser() {
 	return (
 		<>
 			{isLoad && <Load />}
-			{!user && <div className="flex justify-center">Sin datos.</div>}
+			{!user && !isLoad && (
+				<div className="flex justify-center">Sin datos.</div>
+			)}
 			{user && (
 				<Card className="mt-4">
 					<CardHeader>

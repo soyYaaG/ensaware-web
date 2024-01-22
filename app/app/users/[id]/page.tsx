@@ -3,6 +3,7 @@
 import { Load } from "@/components/load";
 import { Picture } from "@/components/picture";
 import { SelectData } from "@/components/selectData";
+import { NoData } from "@/components/noData";
 import {
 	Button,
 	Card,
@@ -52,9 +53,7 @@ export default function EditUser() {
 	return (
 		<>
 			{isLoad && <Load />}
-			{!user && !isLoad && (
-				<div className="flex justify-center">Sin datos.</div>
-			)}
+			{!user && !isLoad && <NoData />}
 			{user && (
 				<Card className="mt-4 relative">
 					<CardHeader>

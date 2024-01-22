@@ -33,7 +33,7 @@ export const Sidebar = () => {
 			<SheetContent side="left">
 				<Command id="sidebar">
 					<CommandInput placeholder="Buscar..." />
-					<CommandList>
+					<CommandList className="max-h-full">
 						<CommandEmpty>Resultado no encontrado.</CommandEmpty>
 
 						<CommandItem>

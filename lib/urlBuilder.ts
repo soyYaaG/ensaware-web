@@ -17,4 +17,5 @@ export const requestPath = {
 	permission: "/{version}/permission",
 	profile: "/{version}/profile",
 	user: "/{version}/user",
+	qr: "/{version}/qr",
 };

@@ -1,3 +1,4 @@
+export * from "./alert";
 export * from "./load";
 export * from "./picture";
 export * from "./selectData";

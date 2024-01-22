@@ -17,15 +17,17 @@ import {
 import { useAuthContext } from "@/contexts/authContext";
 import { useCareer, useProfile, useUsers } from "@/hooks";
 import { getDate } from "@/lib";
-import { GraduationCap } from "lucide-react";
+import { Download, GraduationCap } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function EditUser() {
+	const [qr, setQr] = useState<string>("");
 	const { authPermission, authUser, isLoad } = useAuthContext();
 	const { career, onValueChange, selectCareerData, update } = useCareer();
 	const { profile, selectProfilesData, onValueChangeProfile } = useProfile();
-	const { getUserData, user } = useUsers();
+	const { getQr, getUserData, user } = useUsers();
 	const params = useParams();
 	const id = params.id || "";
 	const router = useRouter();
@@ -35,7 +37,16 @@ export default function EditUser() {
 		if (Array.isArray(id)) value = id[0];
 		else value = id;
 
+		const fetchData = async (id: string) => {
+			const response = await getQr(id);
+			if (!response) return;
+
+			const blobUrl = URL.createObjectURL(response);
+			setQr(blobUrl);
+		};
+
 		getUserData(value);
+		fetchData(value);
 	}, []);
 
 	return (
@@ -45,7 +56,7 @@ export default function EditUser() {
 				<div className="flex justify-center">Sin datos.</div>
 			)}
 			{user && (
-				<Card className="mt-4">
+				<Card className="mt-4 relative">
 					<CardHeader>
 						<CardTitle>Editar Usuario</CardTitle>
 						<CardDescription>
@@ -66,6 +77,31 @@ export default function EditUser() {
 								  })
 								: "Sin actualización."}
 						</CardDescription>
+						<section className="absolute top-0 right-0 border mr-4 rounded-sm h-64 w-64 hidden md:flex flex-col justify-center items-center">
+							{qr && (
+								<>
+									<Image
+										src={qr}
+										priority={false}
+										alt="Código QR"
+										width="200"
+										height="200"
+									/>
+									<Button
+										className="bg-secondary text-slate-900 hover:bg-slate-300"
+										onClick={() => {
+											let tempLink = document.createElement("a");
+											tempLink.href = qr;
+											tempLink.setAttribute("download", "qrCode.png");
+											tempLink.click();
+										}}
+									>
+										<Download className="mr-2 w-4 h-4" />
+										Descargar
+									</Button>
+								</>
+							)}
+						</section>
 					</CardHeader>
 					<CardContent>
 						<div className="flex justify-center my-4">
@@ -137,7 +173,7 @@ export default function EditUser() {
 								<Button
 									className="hover:bg-purple-700"
 									onClick={async () => {
-										await update(user.id);
+										await update(user.id, profile);
 										router.push("/app/users");
 									}}
 								>

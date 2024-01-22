@@ -1,6 +1,11 @@
 import { useAuthContext } from "@/contexts/authContext";
 import { career, selectData, user } from "@/entities";
-import { allCareer, updateCareer, updateUserCareer } from "@/services";
+import {
+	allCareer,
+	updateCareer,
+	updateUserCareer,
+	updateUserProfile,
+} from "@/services";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -8,8 +13,8 @@ import { toast } from "sonner";
 export const useCareer = () => {
 	const [career, setCareer] = useState<string>("");
 	const [selectCareerData, setSelectCareerData] = useState<selectData[]>([]);
-	const router = useRouter();
 	const { setLoad, setUser } = useAuthContext();
+	const router = useRouter();
 
 	useEffect(() => {
 		const getData = async () => {
@@ -34,20 +39,20 @@ export const useCareer = () => {
 		};
 
 		getData();
-	}, [setLoad]);
+	}, []);
 
 	const onValueChange = (value: string) => {
 		setCareer(value);
 	};
 
-	const update = async (userId?: string) => {
+	const update = async (userId?: string, profileId?: string) => {
 		setLoad(true);
 		try {
-			let response: user;
 			if (userId) {
-				response = await updateUserCareer(userId, career);
+				await updateUserCareer(userId, career);
+				await updateUserProfile(userId, profileId || "");
 			} else {
-				response = await updateCareer(career);
+				const response = await updateCareer(career);
 				setUser(response);
 			}
 			router.refresh();

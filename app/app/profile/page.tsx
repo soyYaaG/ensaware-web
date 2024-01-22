@@ -16,17 +16,34 @@ import {
 import { useAuthContext } from "@/contexts/authContext";
 import { useCareer } from "@/hooks/useCareer";
 import { getDate } from "@/lib";
-import { GraduationCap } from "lucide-react";
+import { Download, GraduationCap } from "lucide-react";
 import { Load } from "@/components/load";
+import { useUsers } from "@/hooks";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function Profile() {
+	const [qr, setQr] = useState<string>("");
 	const { authUser, isLoad } = useAuthContext();
 	const { career, onValueChange, selectCareerData, update } = useCareer();
+	const { getQr } = useUsers(false);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const response = await getQr();
+			if (!response) return;
+
+			const blobUrl = URL.createObjectURL(response);
+			setQr(blobUrl);
+		};
+
+		fetchData();
+	}, []);
 
 	return (
 		<>
 			{isLoad && <Load />}
-			<Card className="mt-4">
+			<Card className="mt-4 relative">
 				<CardHeader>
 					<CardTitle>Mi perfil</CardTitle>
 					<CardDescription>
@@ -42,6 +59,31 @@ export default function Profile() {
 							  })
 							: "Sin actualización."}
 					</CardDescription>
+					<section className="absolute top-0 right-0 border mr-4 rounded-sm h-64 w-64 hidden md:flex flex-col justify-center items-center">
+						{qr && (
+							<>
+								<Image
+									src={qr}
+									priority={false}
+									alt="Código QR"
+									width="200"
+									height="200"
+								/>
+								<Button
+									className="bg-secondary text-slate-900 hover:bg-slate-300"
+									onClick={() => {
+										let tempLink = document.createElement("a");
+										tempLink.href = qr;
+										tempLink.setAttribute("download", "qrCode.png");
+										tempLink.click();
+									}}
+								>
+									<Download className="mr-2 w-4 h-4" />
+									Descargar
+								</Button>
+							</>
+						)}
+					</section>
 				</CardHeader>
 				<CardContent>
 					<div className="flex justify-center my-4">

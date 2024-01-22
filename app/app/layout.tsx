@@ -1,6 +1,6 @@
 "use client";
 
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { LogIn } from "lucide-react";
 import { useAuthContext } from "@/contexts/authContext";
@@ -17,9 +17,10 @@ import { Sidebar } from "@/components/sidebar";
 import { Picture } from "@/components/picture";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+	const router = useRouter();
 	const { authUser, isLoggedIn, logout } = useAuthContext();
 
-	if (!isLoggedIn) redirect("/");
+	if (!isLoggedIn) router.push("/");
 
 	return (
 		<main>

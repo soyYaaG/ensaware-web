@@ -105,3 +105,23 @@ export const updateUserCareer = async (userId: string, careerId: string) => {
 
 	return (await response.json()) as user;
 };
+
+export const updateUserProfile = async (userId: string, profileId: string) => {
+	let url: string = urlBuilder.services(requestPath.user, {
+		version: "v1",
+	});
+
+	url = `${url}/${userId}`;
+
+	const response = await fetchInterceptor(url, {
+		method: "PATCH",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			profile_id: profileId,
+		}),
+	});
+
+	return (await response.json()) as user;
+};

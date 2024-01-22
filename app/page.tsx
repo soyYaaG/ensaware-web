@@ -8,13 +8,17 @@ import ensaware from "../public/img/ensaware.png";
 
 import { Button } from "@/components/ui";
 import { useLogin } from "@/hooks";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { useAuthContext } from "@/contexts/authContext";
 import { useEffect } from "react";
+import { CustomAlert } from "@/components/alert";
 
 export default function Login() {
 	const { isLoggedIn } = useAuthContext();
 	const { handleLoginClick } = useLogin();
+	const { get } = useSearchParams();
+
+	const error = get("error");
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -40,6 +44,14 @@ export default function Login() {
 					<FormInput className="mr-4" />
 					<h2>Iniciar Sesión</h2>
 				</div>
+
+				{error && (
+					<CustomAlert
+						title="Iniciar sesión"
+						message="Error al iniciar sesión."
+						className="mb-4"
+					/>
+				)}
 
 				<Image
 					className="mb-10"

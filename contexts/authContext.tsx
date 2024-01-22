@@ -83,34 +83,31 @@ export default function AuthContextProvider({
 		getData();
 	}, []);
 
-	const logout = useCallback(() => {
+	const logout = () => {
 		clearLocalStorage();
 		setAuthUser(null);
 		setAuthPermission(null);
-	}, []);
+	};
 
-	const setLoad = useCallback((value: boolean) => {
+	const setLoad = (value: boolean) => {
 		setIsLoad(value);
-	}, []);
+	};
 
-	const setUser = useCallback((value: user) => {
+	const setUser = (value: user) => {
 		saveInLocalStorage(LocalStorageKeys.USER, JSON.stringify(value));
 		setAuthUser(value);
-	}, []);
+	};
 
-	const value = useMemo(
-		() => ({
-			authPermission,
-			authUser,
-			isLoad: getIsLoad,
-			isLoggedIn: authUser !== null,
-			login,
-			logout,
-			setLoad,
-			setUser,
-		}),
-		[authPermission, authUser, getIsLoad, login, logout, setLoad, setUser]
-	);
+	const value = {
+		authPermission,
+		authUser,
+		isLoad: getIsLoad,
+		isLoggedIn: authUser !== null,
+		login,
+		logout,
+		setLoad,
+		setUser,
+	};
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

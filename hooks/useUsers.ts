@@ -1,11 +1,11 @@
 import { useAuthContext } from "@/contexts/authContext";
 import { queryParameters, user, userPagination } from "@/entities";
 import { getPaginationQueryParameter } from "@/lib";
-import { allUsers, deleteUser, getUser } from "@/services";
+import { allUsers, deleteUser, getQrUser, getUser } from "@/services";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const useUsers = () => {
+export const useUsers = (showAllUsers: boolean = true) => {
 	const { setLoad } = useAuthContext();
 
 	const [pagination, setPagination] = useState<userPagination>();
@@ -15,10 +15,11 @@ export const useUsers = () => {
 	});
 	const [user, setUser] = useState<user | null>(null);
 	const [users, setUsers] = useState<user[]>([]);
+	const [getShowAllUsers] = useState<boolean>(showAllUsers);
 
 	useEffect(() => {
-		getAllUsers(queryParameters);
-	}, [queryParameters]);
+		if (getShowAllUsers) getAllUsers(queryParameters);
+	}, []);
 
 	const getAllUsers = async (query: queryParameters) => {
 		setLoad(true);
@@ -29,6 +30,18 @@ export const useUsers = () => {
 				setPagination(usersPagination);
 				setUsers(usersPagination.items);
 			}
+		} catch (error: any) {
+			toast(error);
+		} finally {
+			setLoad(false);
+		}
+	};
+
+	const getQr = async (userId?: string) => {
+		setLoad(true);
+		try {
+			const response = await getQrUser(userId);
+			return response;
 		} catch (error: any) {
 			toast(error);
 		} finally {
@@ -72,6 +85,7 @@ export const useUsers = () => {
 
 	return {
 		getAllUsers,
+		getQr,
 		getUserData,
 		next,
 		pagination,
